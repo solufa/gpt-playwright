@@ -58,10 +58,6 @@ Playwright 起動以降は server 配下のコードを書き換えるたびに 
 
 Web ブラウザで http://localhost:3000 を開く
 
-開発時のターミナル表示は [notios](https://github.com/frouriojs/notios) で制御している
-
-[Node.js モノレポ開発のターミナルログ混雑解消のための新作 CLI ツール notios](https://zenn.dev/luma/articles/nodejs-new-cli-tool-notios)
-
 閉じるときは `Ctrl + C` を 2 回連続で入力
 
 #### Firebase Emulator
