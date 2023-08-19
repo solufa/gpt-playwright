@@ -1,7 +1,6 @@
-import type { TaskModel } from 'commonTypesWithClient/models';
+import type { TrendModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
-import type { ChangeEvent, FormEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
 import { apiClient } from 'src/utils/apiClient';
@@ -11,63 +10,35 @@ import styles from './index.module.css';
 
 const Home = () => {
   const [user] = useAtom(userAtom);
-  const [tasks, setTasks] = useState<TaskModel[]>();
-  const [label, setLabel] = useState('');
-  const inputLabel = (e: ChangeEvent<HTMLInputElement>) => {
-    setLabel(e.target.value);
-  };
-  const fetchTasks = async () => {
-    const tasks = await apiClient.tasks.$get().catch(returnNull);
+  const [trends, setTrends] = useState<TrendModel[]>();
+  const fetchTrends = async () => {
+    setTrends(undefined);
 
-    if (tasks !== null) setTasks(tasks);
-  };
-  const createTask = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!label) return;
+    const res = await apiClient.trends.$get().catch(returnNull);
 
-    await apiClient.tasks.post({ body: { label } });
-    setLabel('');
-    await fetchTasks();
-  };
-  const toggleDone = async (task: TaskModel) => {
-    await apiClient.tasks._taskId(task.id).patch({ body: { done: !task.done } });
-    await fetchTasks();
-  };
-  const deleteTask = async (task: TaskModel) => {
-    await apiClient.tasks._taskId(task.id).delete();
-    await fetchTasks();
+    if (res !== null) setTrends(res);
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  if (!tasks || !user) return <Loading visible />;
+  if (!user) return <Loading visible />;
 
   return (
     <>
       <BasicHeader user={user} />
-      <div className={styles.title} style={{ marginTop: '160px' }}>
+      <div className={styles.title} style={{ marginTop: '120px' }}>
         Welcome to frourio!
       </div>
 
-      <form style={{ textAlign: 'center', marginTop: '80px' }} onSubmit={createTask}>
-        <input value={label} type="text" onChange={inputLabel} />
-        <input type="submit" value="ADD" />
-      </form>
+      <div style={{ textAlign: 'center', marginTop: '40px' }}>
+        <button onClick={fetchTrends}>Get trends</button>
+      </div>
       <ul className={styles.tasks}>
-        {tasks.map((task) => (
-          <li key={task.id}>
+        {trends?.map((trend, i) => (
+          <li key={i}>
             <label>
-              <input type="checkbox" checked={task.done} onChange={() => toggleDone(task)} />
-              <span>{task.label}</span>
+              <span>
+                {i + 1}位 {trend.word}
+              </span>
             </label>
-            <input
-              type="button"
-              value="DELETE"
-              className={styles.deleteBtn}
-              onClick={() => deleteTask(task)}
-            />
           </li>
         ))}
       </ul>

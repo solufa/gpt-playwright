@@ -2,7 +2,6 @@
   "name": "next-frourio-starter",
   "private": true,
   "scripts": {
-    "notios": "notios dev",
     "dev": "run-p dev:*",
     "dev:client": "npm run dev --prefix client",
     "dev:server": "npm run dev --prefix server",

@@ -20,6 +20,7 @@ https://nodejs.org/ja/ の左ボタン、LTS をダウンロードしてイン�
 $ npm i
 $ npm i --prefix client
 $ npm i --prefix server
+$ npx playwright install-deps
 ```
 
 ### 環境変数ファイルの作成
@@ -31,6 +32,8 @@ $ cp docker/dev/.env.example docker/dev/.env
 $ cp server/prisma/.env.example server/prisma/.env
 ```
 
+server/.env に Twitter のログイン情報を記述
+
 ### ミドルウェアのセットアップ
 
 ```sh
@@ -39,11 +42,19 @@ $ docker-compose up -d
 
 ### 開発サーバー起動
 
-次回以降は以下のコマンドだけで開発できる
+VSCode のターミナルを二つ開いて以下のコマンドを一つずつに入力する
 
 ```sh
-$ npm run notios
+$ npm run dev:client
 ```
+
+```sh
+$ npm run dev:server
+```
+
+Playwright を一度でも起動すると node-dev の再起動が動かなくなるため notios が使えない
+
+Playwright 起動以降は server 配下のコードを書き換えるたびに npm run dev:server をやり直す
 
 Web ブラウザで http://localhost:3000 を開く
 
